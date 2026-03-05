@@ -95,14 +95,23 @@ export default function Header() {
           )}
         </div>
 
-        {/* Mobile: create button */}
+        {/* Mobile: sign in or create */}
         <div className="md:hidden flex items-center gap-1">
-          <Link
-            href="/create"
-            className="p-2 rounded-full text-white/70 hover:bg-white/[0.08] hover:text-white transition-all"
-          >
-            <PlusCircle size={22} />
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              href="/create"
+              className="p-2 rounded-full text-white/70 hover:bg-white/[0.08] hover:text-white transition-all"
+            >
+              <PlusCircle size={22} />
+            </Link>
+          ) : (
+            <button
+              onClick={() => setShowLoginModal(true)}
+              className="px-4 py-1.5 bg-white/[0.12] text-white border border-white/[0.15] rounded-full text-[13px] font-medium hover:bg-white/[0.2] active:scale-[0.97] transition-all duration-200"
+            >
+              Sign in
+            </button>
+          )}
         </div>
       </div>
     </header>
