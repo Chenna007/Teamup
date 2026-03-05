@@ -15,7 +15,7 @@ const navItems = [
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const { notifications, isAuthenticated } = useAppStore();
+  const { notifications, isAuthenticated, setShowLoginModal } = useAppStore();
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
@@ -24,6 +24,21 @@ export default function BottomNav() {
         {navItems.filter((item) => item.href !== '/notifications' || isAuthenticated).map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
+
+          if (item.href === '/create' && !isAuthenticated) {
+            return (
+              <button
+                key={item.href}
+                onClick={() => setShowLoginModal(true)}
+                className="flex flex-col items-center gap-0.5 py-2 px-3 rounded-xl transition-all duration-200 relative text-gray-400 hover:text-gray-600"
+              >
+                <div className="w-11 h-11 -mt-5 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+                  <Icon size={22} className="text-white" />
+                </div>
+                <span className="text-[10px] font-medium -mt-0.5">Create</span>
+              </button>
+            );
+          }
 
           return (
             <Link
