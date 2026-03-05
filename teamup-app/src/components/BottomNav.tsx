@@ -19,8 +19,8 @@ export default function BottomNav() {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800 pb-[env(safe-area-inset-bottom)] md:hidden transition-colors">
-      <div className="flex items-center justify-around px-2 py-1">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-2xl backdrop-saturate-150 border-t border-white/10 pb-[env(safe-area-inset-bottom)] md:hidden transition-all">
+      <div className="flex items-center justify-around px-2 py-1.5">
         {navItems.filter((item) => item.href !== '/notifications' || isAuthenticated).map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
@@ -30,9 +30,9 @@ export default function BottomNav() {
               <button
                 key={item.href}
                 onClick={() => setShowLoginModal(true)}
-                className="flex flex-col items-center gap-0.5 py-2 px-3 rounded-xl transition-all duration-200 relative text-gray-400 hover:text-gray-600"
+                className="flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-all duration-200 relative text-white/50 hover:text-white/80"
               >
-                <div className="w-11 h-11 -mt-5 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+                <div className="w-11 h-11 -mt-5 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30 ring-2 ring-black/20">
                   <Icon size={22} className="text-white" />
                 </div>
                 <span className="text-[10px] font-medium -mt-0.5">Create</span>
@@ -44,14 +44,14 @@ export default function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-0.5 py-2 px-3 rounded-xl transition-all duration-200 relative ${
+              className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-all duration-200 relative ${
                 isActive
-                  ? 'text-emerald-600'
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'text-emerald-400'
+                  : 'text-white/50 hover:text-white/80'
               }`}
             >
               {item.href === '/create' ? (
-                <div className="w-11 h-11 -mt-5 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200">
+                <div className="w-11 h-11 -mt-5 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30 ring-2 ring-black/20">
                   <Icon size={22} className="text-white" />
                 </div>
               ) : (
@@ -61,7 +61,7 @@ export default function BottomNav() {
                 {item.label}
               </span>
               {item.href === '/notifications' && unreadCount > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-1 ring-black/30">
                   {unreadCount}
                 </span>
               )}
