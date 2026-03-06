@@ -1,9 +1,12 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
+import { supabase } from '@/lib/supabase';
 import { formatDate } from '@/lib/utils';
 import { Bell, Check, Heart, Calendar, MapPin, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { Notification } from '@/lib/types';
 
 const typeIcons: Record<string, typeof Bell> = {
   interest_received: Heart,
@@ -20,16 +23,47 @@ const typeColors: Record<string, string> = {
 };
 
 export default function NotificationsPage() {
-  const { notifications, setNotifications } = useAppStore();
+  const { notifications, setNotifications, currentUser } = useAppStore();
 
-  const markAllRead = () => {
+  // Load notifications from Supabase on mount
+  useEffect(() => {
+    async function loadNotifications() {
+      if (!currentUser) return;
+      try {
+        const { data, error } = await supabase
+          .from('notifications')
+          .select('*')
+          .eq('user_id', currentUser.id)
+          .order('created_at', { ascending: false })
+          .limit(50);
+
+        if (!error && data && data.length > 0) {
+          setNotifications(data as Notification[]);
+        }
+      } catch {
+        // Keep existing notifications
+      }
+    }
+    loadNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser?.id]);
+
+  const markAllRead = async () => {
     setNotifications(notifications.map((n) => ({ ...n, read: true })));
+    if (currentUser) {
+      await supabase
+        .from('notifications')
+        .update({ read: true })
+        .eq('user_id', currentUser.id)
+        .eq('read', false);
+    }
   };
 
-  const markRead = (id: string) => {
+  const markRead = async (id: string) => {
     setNotifications(
       notifications.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
+    await supabase.from('notifications').update({ read: true }).eq('id', id);
   };
 
   const unreadCount = notifications.filter((n) => !n.read).length;

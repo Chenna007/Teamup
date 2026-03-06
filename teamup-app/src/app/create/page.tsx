@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAppStore } from '@/lib/store';
+import { supabase } from '@/lib/supabase';
 
 export default function CreateActivityPage() {
   const [formData, setFormData] = useState({
@@ -27,7 +28,9 @@ export default function CreateActivityPage() {
     max_participants: 10,
   });
   const [submitted, setSubmitted] = useState(false);
-  const { isAuthenticated, setShowLoginModal, setLoginRedirectAction } = useAppStore();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { isAuthenticated, setShowLoginModal, setLoginRedirectAction, userLocation, currentUser } = useAppStore();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -36,18 +39,49 @@ export default function CreateActivityPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      setLoginRedirectAction(() => {
-        console.log('Activity created:', formData);
-        setSubmitted(true);
-      });
+      setLoginRedirectAction(() => handleSubmit(e));
       setShowLoginModal(true);
       return;
     }
-    console.log('Activity created:', formData);
-    setSubmitted(true);
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Try Supabase insert
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (session && currentUser) {
+        const { error: insertError } = await supabase
+          .from('activities')
+          .insert({
+            title: formData.title,
+            description: formData.description,
+            category: formData.category,
+            address: formData.address,
+            date: formData.date,
+            time: formData.time,
+            max_participants: formData.max_participants,
+            latitude: userLocation?.latitude || 0,
+            longitude: userLocation?.longitude || 0,
+            creator_id: currentUser.id,
+          });
+
+        if (insertError) {
+          setError(insertError.message);
+          setLoading(false);
+          return;
+        }
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError('Failed to create activity. Please try again.');
+    }
+    setLoading(false);
   };
 
   if (submitted) {
@@ -216,11 +250,15 @@ export default function CreateActivityPage() {
           </div>
 
           {/* Submit */}
+          {error && (
+            <div className="p-3 bg-red-50 text-red-600 text-sm rounded-xl">{error}</div>
+          )}
           <button
             type="submit"
-            className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-semibold text-base hover:bg-emerald-600 active:scale-[0.98] transition-all shadow-lg shadow-emerald-200"
+            disabled={loading}
+            className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-semibold text-base hover:bg-emerald-600 active:scale-[0.98] transition-all shadow-lg shadow-emerald-200 disabled:opacity-50"
           >
-            Create Activity
+            {loading ? 'Creating…' : 'Create Activity'}
           </button>
         </form>
       </div>

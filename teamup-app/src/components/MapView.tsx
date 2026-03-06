@@ -192,8 +192,8 @@ export default function MapView({
       const el = document.createElement('div');
       el.className = 'user-location-marker';
 
-      const avatar = currentUser.avatar_url;
-      const initial = currentUser.full_name?.charAt(0) || '?';
+      const avatar = currentUser?.avatar_url;
+      const initial = currentUser?.full_name?.charAt(0) || '?';
 
       el.innerHTML = `
         <div style="position: relative; cursor: pointer;">
@@ -265,7 +265,7 @@ export default function MapView({
                   : `<span style="color:white;font-weight:700;font-size:16px;">${escapeHtml(initial)}</span>`
                 }
               </div>
-              <div style="font-weight:600;font-size:14px;color:#111;">${escapeHtml(currentUser.full_name)}</div>
+              <div style="font-weight:600;font-size:14px;color:#111;">${escapeHtml(currentUser?.full_name || 'You')}</div>
               <div style="font-size:11px;color:#888;margin-top:2px;">Your location</div>
             </div>
           `)

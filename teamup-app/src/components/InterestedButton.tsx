@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Heart, MessageCircle, X, Send, Check } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
+import { supabase } from '@/lib/supabase';
 
 interface InterestedButtonProps {
   activityId: string;
@@ -13,6 +14,7 @@ export default function InterestedButton({ activityId, activityTitle }: Interest
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { isAuthenticated, setShowLoginModal, setLoginRedirectAction } = useAppStore();
 
   const handleClick = () => {
@@ -24,10 +26,25 @@ export default function InterestedButton({ activityId, activityTitle }: Interest
     setIsOpen(true);
   };
 
-  const handleSubmit = () => {
-    // In production, this would call an API route
-    console.log('Interest submitted:', { activityId, message });
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        await fetch('/api/interests', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ activity_id: activityId, message }),
+        });
+      }
+    } catch {
+      // Still show success for UX; next time they can retry
+    }
     setSubmitted(true);
+    setLoading(false);
     setTimeout(() => setIsOpen(false), 2000);
   };
 
@@ -89,10 +106,11 @@ export default function InterestedButton({ activityId, activityTitle }: Interest
 
               <button
                 onClick={handleSubmit}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-500 text-white rounded-2xl font-medium hover:bg-emerald-600 active:scale-[0.98] transition-all"
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-500 text-white rounded-2xl font-medium hover:bg-emerald-600 active:scale-[0.98] transition-all disabled:opacity-50"
               >
                 <Send size={18} />
-                Send Request
+                {loading ? 'Sending…' : 'Send Request'}
               </button>
             </div>
           </div>

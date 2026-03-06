@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { getMockActivities } from '@/lib/mock-data';
 import { CATEGORIES } from '@/lib/constants';
 import { useAppStore } from '@/lib/store';
+import { updateProfile } from '@/lib/supabase';
 import ActivityCard from '@/components/ActivityCard';
 import {
   User,
@@ -23,19 +24,38 @@ import {
 import Link from 'next/link';
 
 export default function ProfilePage() {
-  const { currentUser, updateCurrentUser, theme, setTheme, searchRadius, setSearchRadius } = useAppStore();
+  const { currentUser, updateCurrentUser, theme, setTheme, searchRadius, setSearchRadius, isAuthenticated, setShowLoginModal } = useAppStore();
   const [activeTab, setActiveTab] = useState<'activities' | 'interested'>('activities');
   const [isEditing, setIsEditing] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
   const [editForm, setEditForm] = useState({
-    full_name: currentUser.full_name,
-    email: currentUser.email,
-    bio: currentUser.bio || '',
-    location: currentUser.location || '',
-    interests: [...currentUser.interests],
+    full_name: currentUser?.full_name || '',
+    email: currentUser?.email || '',
+    bio: currentUser?.bio || '',
+    location: currentUser?.location || '',
+    interests: currentUser ? [...currentUser.interests] : [],
   });
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Show login prompt if not authenticated
+  if (!isAuthenticated || !currentUser) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
+        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+          <User size={24} className="text-gray-400" />
+        </div>
+        <h2 className="text-lg font-semibold text-gray-800 mb-1">Sign in to view your profile</h2>
+        <p className="text-sm text-gray-500 mb-4">Your activities, preferences, and more</p>
+        <button
+          onClick={() => setShowLoginModal(true)}
+          className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 transition-colors"
+        >
+          Sign In
+        </button>
+      </div>
+    );
+  }
 
   const myActivities = getMockActivities()
     .filter((a) => a.creator_id === currentUser.id)
@@ -53,15 +73,23 @@ export default function ProfilePage() {
     setIsEditing(true);
   };
 
-  const saveProfile = () => {
-    updateCurrentUser({
+  const saveProfile = async () => {
+    const updates = {
       full_name: editForm.full_name,
       email: editForm.email,
       bio: editForm.bio || null,
       location: editForm.location || null,
       interests: editForm.interests,
       ...(avatarPreview ? { avatar_url: avatarPreview } : {}),
-    });
+    };
+
+    updateCurrentUser(updates);
+
+    // Persist to Supabase
+    if (currentUser) {
+      await updateProfile(currentUser.id, updates);
+    }
+
     setAvatarPreview(null);
     setIsEditing(false);
   };

@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import LocationProvider from '@/components/LocationProvider';
 import LoginModal from '@/components/LoginModal';
+import AuthProvider from '@/components/AuthProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,12 +35,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased bg-gray-50 text-gray-900 transition-colors duration-300`} suppressHydrationWarning>
         <LocationProvider>
-          <Header />
-          <LoginModal />
-          <main className="min-h-screen pt-12 pb-20 md:pb-0">
-            {children}
-          </main>
-          <BottomNav />
+          <AuthProvider>
+            <Header />
+            <LoginModal />
+            <main className="min-h-screen pt-12 pb-20 md:pb-0">
+              {children}
+            </main>
+            <BottomNav />
+          </AuthProvider>
         </LocationProvider>
       </body>
     </html>

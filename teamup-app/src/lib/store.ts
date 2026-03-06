@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Activity, Coordinates, Notification, UserProfile } from './types';
 import { getMockActivitiesWithCreators, setMockUserLocation, MOCK_USERS } from './mock-data';
 import { calculateDistance } from './utils';
+import { supabase } from './supabase';
 
 interface AppState {
   // Location
@@ -11,7 +12,8 @@ interface AppState {
   setLocationError: (err: string | null) => void;
 
   // Current User
-  currentUser: UserProfile;
+  currentUser: UserProfile | null;
+  setCurrentUser: (user: UserProfile | null) => void;
   updateCurrentUser: (updates: Partial<UserProfile>) => void;
 
   // Activities
@@ -42,12 +44,13 @@ interface AppState {
 
   // Auth
   isAuthenticated: boolean;
+  setIsAuthenticated: (v: boolean) => void;
   showLoginModal: boolean;
   setShowLoginModal: (v: boolean) => void;
   loginRedirectAction: (() => void) | null;
   setLoginRedirectAction: (action: (() => void) | null) => void;
   login: () => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 
   // Notifications
   notifications: Notification[];
@@ -55,7 +58,7 @@ interface AppState {
   unreadCount: number;
 
   // Actions
-  loadActivities: () => void;
+  loadActivities: () => Promise<void>;
   searchActivities: (query: string, category?: string) => void;
 }
 
@@ -68,9 +71,13 @@ export const useAppStore = create<AppState>((set, get) => ({
   locationError: null,
   setLocationError: (err) => set({ locationError: err }),
 
-  currentUser: { ...MOCK_USERS['user1'] },
+  currentUser: null,
+  setCurrentUser: (user) => set({ currentUser: user }),
   updateCurrentUser: (updates) => {
-    set((state) => ({ currentUser: { ...state.currentUser, ...updates } }));
+    set((state) => {
+      if (!state.currentUser) return state;
+      return { currentUser: { ...state.currentUser, ...updates } };
+    });
   },
 
   activities: [],
@@ -103,6 +110,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   // Auth
   isAuthenticated: false,
+  setIsAuthenticated: (v) => set({ isAuthenticated: v }),
   showLoginModal: false,
   setShowLoginModal: (v) => set({ showLoginModal: v }),
   loginRedirectAction: null,
@@ -115,49 +123,80 @@ export const useAppStore = create<AppState>((set, get) => ({
       set({ loginRedirectAction: null });
     }
   },
-  logout: () => set({ isAuthenticated: false }),
+  logout: async () => {
+    await supabase.auth.signOut();
+    set({ isAuthenticated: false, currentUser: null });
+  },
 
-  notifications: [
-    {
-      id: '1',
-      user_id: 'current',
-      type: 'interest_received',
-      title: 'New teammate request',
-      message: 'Sofia wants to join your Weekend Football Match',
-      read: false,
-      activity_id: '1',
-      created_at: '2026-03-05T08:00:00Z',
-    },
-    {
-      id: '2',
-      user_id: 'current',
-      type: 'new_activity',
-      title: 'New activity nearby',
-      message: 'Acoustic Jam Session was just posted near you',
-      read: false,
-      activity_id: '2',
-      created_at: '2026-03-05T06:00:00Z',
-    },
-    {
-      id: '3',
-      user_id: 'current',
-      type: 'activity_reminder',
-      title: 'Activity tomorrow',
-      message: 'Morning Yoga in the Park is happening tomorrow',
-      read: true,
-      activity_id: '3',
-      created_at: '2026-03-04T20:00:00Z',
-    },
-  ],
+  notifications: [],
   setNotifications: (n) => set({ notifications: n }),
   get unreadCount() {
     return get().notifications.filter((n) => !n.read).length;
   },
 
-  loadActivities: () => {
+  loadActivities: async () => {
     const loc = get().userLocation;
 
-    // Update mock data's center point so activities scatter around user
+    // Try loading from Supabase first
+    try {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      if (url && url !== 'your_supabase_url_here') {
+        if (loc) {
+          // Use the nearby_activities RPC function
+          const { data, error } = await supabase.rpc('nearby_activities', {
+            user_lat: loc.latitude,
+            user_lng: loc.longitude,
+            radius_km: 50,
+          });
+
+          if (!error && data && data.length > 0) {
+            // Fetch creator profiles for each activity
+            const creatorIds = [...new Set(data.map((a: { creator_id: string }) => a.creator_id))];
+            const { data: profiles } = await supabase
+              .from('profiles')
+              .select('*')
+              .in('id', creatorIds);
+
+            const profileMap = new Map(
+              (profiles || []).map((p: UserProfile) => [p.id, p])
+            );
+
+            const activities: Activity[] = data.map((a: Activity & { distance_km?: number }) => ({
+              ...a,
+              date: String(a.date),
+              time: String(a.time),
+              distance: a.distance_km,
+              creator: profileMap.get(a.creator_id) || undefined,
+            }));
+
+            set({ activities, filteredActivities: activities });
+            return;
+          }
+        } else {
+          // No location — fetch all activities
+          const { data, error } = await supabase
+            .from('activities')
+            .select('*, creator:profiles(*)')
+            .gte('date', new Date().toISOString().split('T')[0])
+            .order('created_at', { ascending: false })
+            .limit(100);
+
+          if (!error && data && data.length > 0) {
+            const activities: Activity[] = data.map((a: Record<string, unknown>) => ({
+              ...a,
+              date: String(a.date),
+              time: String(a.time),
+            })) as Activity[];
+            set({ activities, filteredActivities: activities });
+            return;
+          }
+        }
+      }
+    } catch {
+      // Fall through to mock data
+    }
+
+    // Fallback: use mock data
     if (loc) {
       setMockUserLocation(loc);
     }
