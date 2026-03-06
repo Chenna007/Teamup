@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Teamup — Find Teammates & Activities Near You
+
+A mobile-first web app that helps people discover and join activities, sports, music sessions, and more happening near them. Built with **Next.js**, **TypeScript**, **Tailwind CSS**, **Supabase**, and **Mapbox**.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS 4
+- **Database & Auth:** Supabase (PostgreSQL + PostGIS)
+- **Maps:** Mapbox GL JS
+- **State Management:** Zustand
+- **Deployment:** Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm, yarn, or pnpm
+
+### Setup
+
+```bash
+cd teamup-app
+npm install
+```
+
+Copy the environment template and fill in your keys:
+
+```bash
+cp .env.example .env.local
+```
+
+Required environment variables:
+
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon/public key |
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | Mapbox GL access token |
+
+### Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app. It works with mock data out of the box — add your API keys to enable maps and database features.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Database Setup (Supabase)
 
-To learn more about Next.js, take a look at the following resources:
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Run the schema in `supabase/schema.sql` via the Supabase SQL Editor
+3. Enable Realtime on the `activities` and `notifications` tables
+4. Copy your project URL and anon key into `.env.local`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy to Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Push your code to GitHub
+2. Go to [vercel.com/new](https://vercel.com/new) and import your repository
+3. Set the **Root Directory** to `teamup-app`
+4. Add your environment variables in the Vercel dashboard:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_MAPBOX_TOKEN`
+5. Click **Deploy**
 
-## Deploy on Vercel
+Vercel will automatically detect Next.js and configure the build settings.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/           # Pages & API routes (App Router)
+├── components/    # Reusable UI components
+├── hooks/         # Custom React hooks
+├── lib/           # Utilities, types, store, constants
+└── types/         # TypeScript declarations
+supabase/
+└── schema.sql     # Database schema with PostGIS & RLS
+```
+
+## License
+
+MIT
