@@ -123,6 +123,67 @@ export const MOCK_USERS: Record<string, UserProfile> = {
     interests: ['art-design', 'basketball', 'creative'],
     created_at: '2025-12-01T10:00:00Z',
   },
+  // ──── Badminton players ────
+  userBad1: {
+    id: 'userBad1',
+    email: 'rahul@example.com',
+    full_name: 'Rahul Menon',
+    avatar_url: 'https://randomuser.me/api/portraits/men/35.jpg',
+    bio: 'Competitive badminton player from Hyderabad. Doubles specialist and shuttle addict.',
+    location: 'Near you',
+    interests: ['badminton', 'fitness', 'sports'],
+    created_at: '2025-08-10T10:00:00Z',
+  },
+  userBad2: {
+    id: 'userBad2',
+    email: 'sneha@example.com',
+    full_name: 'Sneha Reddy',
+    avatar_url: 'https://randomuser.me/api/portraits/women/33.jpg',
+    bio: 'State-level badminton player turned coach. Love introducing new people to the sport.',
+    location: 'Near you',
+    interests: ['badminton', 'fitness', 'yoga-wellness'],
+    created_at: '2025-09-15T10:00:00Z',
+  },
+  userBad3: {
+    id: 'userBad3',
+    email: 'kevin@example.com',
+    full_name: 'Kevin Lim',
+    avatar_url: 'https://randomuser.me/api/portraits/men/36.jpg',
+    bio: 'Badminton enthusiast from Singapore. Always looking for smash partners after work.',
+    location: 'Near you',
+    interests: ['badminton', 'gaming', 'coffee'],
+    created_at: '2025-10-20T10:00:00Z',
+  },
+  userBad4: {
+    id: 'userBad4',
+    email: 'ananya@example.com',
+    full_name: 'Ananya Iyer',
+    avatar_url: 'https://randomuser.me/api/portraits/women/35.jpg',
+    bio: 'Weekend warrior on the badminton court. Mixed doubles is my jam!',
+    location: 'Near you',
+    interests: ['badminton', 'fitness', 'travel'],
+    created_at: '2025-11-05T10:00:00Z',
+  },
+  userBad5: {
+    id: 'userBad5',
+    email: 'vikram@example.com',
+    full_name: 'Vikram Singh',
+    avatar_url: 'https://randomuser.me/api/portraits/men/37.jpg',
+    bio: 'Club-level badminton player. Organizing tournaments and pickup games every week.',
+    location: 'Near you',
+    interests: ['badminton', 'cricket', 'sports'],
+    created_at: '2025-12-12T10:00:00Z',
+  },
+  userBad6: {
+    id: 'userBad6',
+    email: 'jia@example.com',
+    full_name: 'Jia Chen',
+    avatar_url: 'https://randomuser.me/api/portraits/women/36.jpg',
+    bio: 'Badminton coach and fitness trainer. Making the sport fun and accessible for everyone.',
+    location: 'Near you',
+    interests: ['badminton', 'fitness', 'yoga-wellness'],
+    created_at: '2026-01-08T10:00:00Z',
+  },
 };
 
 // ─── Additional unique creators (user13–user64) — one per activity ────────────
@@ -205,7 +266,7 @@ const ACTIVITY_TEMPLATES: ActivityTemplate[] = [
   // ──────────── SPORTS (1-10) ────────────
   { id: '1', title: 'Weekend Football Match', description: 'Friendly 7-a-side football on turf. All skill levels welcome — just bring boots and water!', category: 'sports', address: 'Local Sports Ground', date: '2026-03-07', time: '07:00', max_participants: 14, current_participants: 9, creator_id: 'user1', image_url: null, created_at: '2026-03-04T10:00:00Z' },
   { id: '2', title: 'Tennis Doubles Mixer', description: 'Looking for partners to rotate doubles games. Intermediate level preferred. Rackets available to borrow.', category: 'sports', address: 'Community Tennis Courts', date: '2026-03-08', time: '09:00', max_participants: 8, current_participants: 5, creator_id: 'user1', image_url: null, created_at: '2026-03-04T11:00:00Z' },
-  { id: '3', title: 'Badminton Smash Hour', description: 'Indoor badminton sessions every Saturday. Mixed doubles and singles. Shuttlecocks provided.', category: 'badminton', address: 'Indoor Sports Hall', date: '2026-03-07', time: '10:00', max_participants: 12, current_participants: 7, creator_id: 'user9', image_url: null, created_at: '2026-03-04T12:00:00Z' },
+  { id: '3', title: 'Badminton Casual Rally', description: 'Casual rallying for all levels. Just come and play — shuttlecocks and extra rackets available.', category: 'badminton', address: 'Neighborhood Gym', date: '2026-03-07', time: '10:00', max_participants: 10, current_participants: 5, creator_id: 'userBad2', image_url: null, created_at: '2026-03-04T12:00:00Z' },
   { id: '4', title: 'Volleyball Beach Pickup', description: 'Casual beach volleyball — 4v4 format. No experience needed, just a fun attitude.', category: 'sports', address: 'Beachfront Court', date: '2026-03-09', time: '16:00', max_participants: 8, current_participants: 3, creator_id: 'user10', image_url: null, created_at: '2026-03-04T13:00:00Z' },
   { id: '5', title: 'Table Tennis Tournament', description: 'Singles elimination tournament at the rec center. All levels. Prizes for top 3!', category: 'sports', address: 'Recreation Center', date: '2026-03-08', time: '14:00', max_participants: 16, current_participants: 10, creator_id: 'user11', image_url: null, created_at: '2026-03-04T14:00:00Z' },
   { id: '6', title: 'Running Club — 5K Mornings', description: 'We run a chill 5K every weekday at dawn. Pace groups from 5 to 7 min/km. Show up and go!', category: 'sports', address: 'Waterfront Promenade', date: '2026-03-06', time: '05:30', max_participants: 30, current_participants: 18, creator_id: 'user1', image_url: null, created_at: '2026-03-04T15:00:00Z' },
@@ -213,6 +274,15 @@ const ACTIVITY_TEMPLATES: ActivityTemplate[] = [
   { id: '8', title: 'Touch Rugby Pickup', description: 'Non-contact rugby for mixed teams of all ages. Great cardio and good people!', category: 'sports', address: 'Rugby Field', date: '2026-03-07', time: '17:00', max_participants: 20, current_participants: 12, creator_id: 'user12', image_url: null, created_at: '2026-03-04T17:00:00Z' },
   { id: '9', title: 'Boxing Fitness Meetup', description: 'Partner up for pad work and heavy bag drills. Gloves and wraps available at the gym.', category: 'sports', address: 'Knockout Gym', date: '2026-03-08', time: '18:00', max_participants: 10, current_participants: 6, creator_id: 'user10', image_url: null, created_at: '2026-03-04T18:00:00Z' },
   { id: '10', title: 'Martial Arts Open Mat', description: 'Open sparring and drills — BJJ, Muay Thai, and wrestling. Respectful rolling only.', category: 'sports', address: 'Combat Sports Academy', date: '2026-03-09', time: '19:00', max_participants: 16, current_participants: 9, creator_id: 'user11', image_url: null, created_at: '2026-03-04T19:00:00Z' },
+
+  // ──────────── BADMINTON (161-170) ────────────
+  { id: '161', title: 'Badminton Smash Hour', description: 'Indoor badminton sessions every Saturday. Mixed doubles and singles. Shuttlecocks provided.', category: 'badminton', address: 'Indoor Sports Hall', date: '2026-03-07', time: '10:00', max_participants: 12, current_participants: 7, creator_id: 'userBad1', image_url: null, created_at: '2026-03-04T10:00:00Z' },
+  { id: '162', title: 'Badminton Doubles League', description: 'Weekly doubles league — register as a pair or get matched. All levels welcome!', category: 'badminton', address: 'Community Sports Center', date: '2026-03-08', time: '18:00', max_participants: 16, current_participants: 10, creator_id: 'userBad2', image_url: null, created_at: '2026-03-04T11:00:00Z' },
+  { id: '163', title: 'Beginner Badminton Coaching', description: 'Learn proper grip, footwork, and basic shots. Rackets provided for newcomers.', category: 'badminton', address: 'Sports Academy Court', date: '2026-03-06', time: '17:00', max_participants: 10, current_participants: 6, creator_id: 'userBad6', image_url: null, created_at: '2026-03-04T12:00:00Z' },
+  { id: '164', title: 'Friday Night Badminton Social', description: 'Casual games, rotating partners, and post-game snacks. The best way to end the week!', category: 'badminton', address: 'Recreation Club', date: '2026-03-06', time: '19:00', max_participants: 14, current_participants: 9, creator_id: 'userBad3', image_url: null, created_at: '2026-03-04T13:00:00Z' },
+  { id: '165', title: 'Badminton Singles Tournament', description: 'Knockout singles tournament. Three skill brackets: beginner, intermediate, advanced.', category: 'badminton', address: 'National Badminton Arena', date: '2026-03-09', time: '09:00', max_participants: 24, current_participants: 16, creator_id: 'userBad5', image_url: null, created_at: '2026-03-04T14:00:00Z' },
+  { id: '166', title: 'Mixed Doubles Fun Match', description: 'Pair up for mixed doubles — we rotate partners every game. Great for meeting new players.', category: 'badminton', address: 'Indoor Badminton Club', date: '2026-03-07', time: '16:00', max_participants: 12, current_participants: 8, creator_id: 'userBad4', image_url: null, created_at: '2026-03-04T15:00:00Z' },
+  { id: '167', title: 'Advanced Smash & Defense Drills', description: 'High-intensity drills focused on smash power and defensive returns. Intermediate+ only.', category: 'badminton', address: 'Elite Sports Complex', date: '2026-03-08', time: '07:00', max_participants: 8, current_participants: 5, creator_id: 'userBad1', image_url: null, created_at: '2026-03-04T16:00:00Z' },
 
   // ──────────── CRICKET (11-20) ────────────
   { id: '11', title: 'T20 Blast Weekend', description: 'Fast-paced T20 format match. Two teams of 11. White ball, colored kits encouraged!', category: 'cricket', address: 'Cricket Ground Nearby', date: '2026-03-08', time: '08:00', max_participants: 22, current_participants: 16, creator_id: 'user6', image_url: null, created_at: '2026-03-04T10:00:00Z' },
@@ -400,6 +470,7 @@ const ACTIVITY_TEMPLATES: ActivityTemplate[] = [
 const ACTIVITIES_PER_CATEGORY: Record<string, number> = {
   'sports': 7,
   'cricket': 4,
+  'badminton': 7,
   'music': 3,
   'creative': 2,
   'fitness': 5,
