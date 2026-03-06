@@ -337,7 +337,7 @@ export default function MapView({
 
 function getCategoryEmoji(slug: string): string {
   const map: Record<string, string> = {
-    sports: '⚽', cricket: '🏏', music: '🎸', creative: '📷',
+    sports: '⚽', cricket: '🏏', badminton: '🏸', music: '🎸', creative: '📷',
     fitness: '🏃', gaming: '🎮', filmmaking: '🎬', 'art-design': '🎨',
     'book-clubs': '📚', startups: '💻', 'yoga-wellness': '🧘',
     cycling: '🚴', hiking: '🥾', coffee: '☕', travel: '🌍', basketball: '🏀',
@@ -347,7 +347,7 @@ function getCategoryEmoji(slug: string): string {
 
 function getCategoryColor(slug: string): string {
   const map: Record<string, string> = {
-    sports: '#10b981', cricket: '#059669', music: '#8b5cf6', creative: '#ec4899',
+    sports: '#10b981', cricket: '#059669', badminton: '#06b6d4', music: '#8b5cf6', creative: '#ec4899',
     fitness: '#f59e0b', gaming: '#6366f1', filmmaking: '#ef4444', 'art-design': '#f472b6',
     'book-clubs': '#0ea5e9', startups: '#64748b', 'yoga-wellness': '#14b8a6',
     cycling: '#84cc16', hiking: '#a3e635', coffee: '#92400e', travel: '#0284c7', basketball: '#ea580c',
