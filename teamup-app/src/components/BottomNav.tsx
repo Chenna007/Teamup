@@ -21,7 +21,7 @@ export default function BottomNav() {
   const renderCreateButton = (isLink: boolean) => {
     const inner = (
       <>
-        <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center shadow-md shadow-emerald-500/25">
+        <div className="w-7 h-7 bg-emerald-500 rounded-full flex items-center justify-center shadow-md shadow-emerald-500/25">
           <PlusCircle size={20} className="text-white" />
         </div>
         <span className="text-[10px] font-medium text-emerald-400">Create</span>
