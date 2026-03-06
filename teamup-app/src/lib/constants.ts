@@ -17,6 +17,7 @@ export const CATEGORIES: Category[] = [
   { id: '14', label: 'Meet people for coffee chats', emoji: '☕', slug: 'coffee', image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop&auto=format' },
   { id: '15', label: 'Connect with travelers', emoji: '🌍', slug: 'travel', image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&h=300&fit=crop&auto=format' },
   { id: '16', label: 'Join local basketball games', emoji: '🏀', slug: 'basketball', image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=400&h=300&fit=crop&auto=format' },
+  { id: '17', label: 'Play badminton', emoji: '🏸', slug: 'badminton', image: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=400&h=300&fit=crop&auto=format' },
 ];
 
 // Fallback center — only used until browser geolocation responds
